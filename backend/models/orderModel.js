@@ -59,7 +59,7 @@ const orderSchema = mongoose.Schema({
         type: Date
     },
     isDelivered: {
-        type: false,
+        type: Boolean,
         required: true,
         default: false
     },
