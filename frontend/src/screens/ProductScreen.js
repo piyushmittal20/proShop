@@ -20,17 +20,30 @@ const ProductScreen = ({ match, history }) => {
     const { product, loading, error } = productDetails
 
     const productReviewCreate = useSelector(state => state.productReviewCreate)
-    const { loading: loadingProductReview, error: errorProductReview, success: successProductReview } = productReviewCreate
+    const { error: errorProductReview, success: successProductReview } = productReviewCreate
 
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
 
     useEffect(() => {
+        if (successProductReview) {
+            alert('Review Submitted')
+            setComment('')
+            setRating(0)
+            dispatch({ type: PRODUCT_CREATE_REVIEW_RESET })
+        }
         dispatch(listProductDetails(match.params.id))
-    }, [dispatch, match])
+    }, [dispatch, match, successProductReview])
 
     const addToCartHandler = () => {
         history.push(`/cart/${match.params.id}?qty=${qty}`);
+    }
+
+    const submitHandler = (e) => {
+        e.preventDefault()
+        dispatch(createProductReview(match.params.id, {
+            rating, comment
+        }))
     }
 
     return (
@@ -121,7 +134,30 @@ const ProductScreen = ({ match, history }) => {
                                 ))}
                                 <ListGroup.Item>
                                     <h2>Write a customer review</h2>
-                                    {userInfo ? (<h1></h1>) : <Message> Please <Link to='/login'>sign in</Link> to write a review {' '}</Message>}
+                                    {errorProductReview &&
+                                        <Message variant='danger'>{errorProductReview}
+                                        </Message>}
+                                    {userInfo ? (
+                                        <Form onSubmit={submitHandler}>
+                                            <Form.Group controlId='rating'>
+                                                <Form.Label>Rating</Form.Label>
+                                                <Form.Control as='select' value={rating} onChange={(e) => setRating(e.target.value)}>
+                                                    <option value=''>Select...</option>
+                                                    <option value='1'>1 - Poor</option>
+                                                    <option value='2'>2 - Fair</option>
+                                                    <option value='3'>3 - Good</option>
+                                                    <option value='4'>4 - Very Good</option>
+                                                    <option value='5'>5 - Excellent</option>
+                                                </Form.Control>
+                                            </Form.Group>
+                                            <Form.Group controlId='comment'>
+                                                <Form.Label>Comment</Form.Label>
+                                                <Form.Control as='textarea' row='3' value={comment} onChange={(e) => setComment(e.target.value)}>
+                                                </Form.Control>
+                                            </Form.Group>
+                                            <Button type='submit' variant='primary'>Submit</Button>
+                                        </Form>
+                                    ) : <Message> Please <Link to='/login'>sign in</Link> to write a review {' '}</Message>}
                                 </ListGroup.Item>
                             </ListGroup>
                         </Col>

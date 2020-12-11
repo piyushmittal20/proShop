@@ -15,17 +15,16 @@ import {
     PRODUCT_UPDATE_REQUEST,
     PRODUCT_UPDATE_SUCCESS,
     PRODUCT_UPDATE_FAIL,
-    PRODUCT_CREATE_REVIEW_RESET,
     PRODUCT_CREATE_REVIEW_REQUEST,
     PRODUCT_CREATE_REVIEW_SUCCESS,
     PRODUCT_CREATE_REVIEW_FAIL
 } from '../constants/productConstants';
 
-export const listProducts = () => async (dispatch) => {
+export const listProducts = (keyword = '') => async (dispatch) => {
     try {
         dispatch({ type: PRODUCT_LIST_REQUEST })
 
-        const { data } = await axios.get('/api/products')
+        const { data } = await axios.get(`/api/products?keyword=${keyword}`)
 
         dispatch({
             type: PRODUCT_LIST_SUCCESS,
@@ -161,7 +160,7 @@ export const createProductReview = (productId, review) => async (dispatch, getSt
             type: PRODUCT_CREATE_REVIEW_REQUEST
         })
 
-        const { userLogin: { userInfo } } = getState
+        const { userLogin: { userInfo } } = getState()
 
         const config = {
             headers: {
