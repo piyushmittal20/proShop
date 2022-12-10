@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  node_react_app:
+    container_name: node_react_application_container
+    build: .
+    restart: always
+    ports:
+      - 5000:5000
+    healthcheck:
+      test: "exit 0"
+    environment:
+      MONGO_URI: "${MONGO_URI}"
+      PORT: "${PORT}"
+      NODE_ENV: "${NODE_ENV}"
+      JWT_SECRET: "${JWT_SECRET}"
+      PAYPAL_CIENT_ID: "${PAYPAL_CLIENT_ID}"
