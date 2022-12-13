@@ -13,3 +13,5 @@ To run the both server concurrently.
 You just have to add your own mongo URI and some other stuff.
 
 This is an awesome project to learn MERN stack..
+
+Deploying v1
